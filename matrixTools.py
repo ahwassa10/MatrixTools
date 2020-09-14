@@ -7,9 +7,9 @@ def toMatrix(string):
     longest = 0
     
     while charPointer < len(string):
-        if string[charPointer].isalnum():
+        if string[charPointer].isalnum() or string[charPointer] == '-':
             num = ''
-            while charPointer < len(string) and string[charPointer].isalnum():
+            while charPointer < len(string) and (string[charPointer].isalnum() or string[charPointer] == '-'):
                 num = num + string[charPointer]
                 charPointer = charPointer + 1
             if len(num) > 0:
