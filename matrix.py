@@ -1,6 +1,9 @@
 class matrixSyntaxError(Exception):
     pass
 
+class matrixFullError(Exception):
+    pass
+
 class matrix:
     """
     A class for building and working with 2D matrices.
@@ -25,7 +28,7 @@ class matrix:
     
     """
     
-    def __init__(self, m=0, n=0, name='A1'):
+    def __init__(self, m=0, n=0, data=[], name='A1'):
         """
         Initializes the matrix. If m or n are not zero, the matrix is initialized with zeroes.
         """
@@ -33,13 +36,14 @@ class matrix:
         self.rows = m
         self.columns = n
         self.label = name
-        self.data = []
+        self.data = data
         
-        for i in range(m):
-            tempRow = []
-            for j in range(n):
-                tempRow.append(0)
-            self.data.append(tempRow)
+        if data == []:
+            for i in range(m):
+                tempRow = []
+                for j in range(n):
+                    tempRow.append(0)
+                self.data.append(tempRow)
     
     
     def buildFrom(self, inString):
@@ -84,7 +88,7 @@ class matrix:
                 while inIterator < len(inString) and (inString[inIterator].isalnum() or inString[inIterator] == '-' or inString[inIterator] == '.'):
                     entry = entry + inString[inIterator]
                     inIterator = inIterator + 1
-                row.append(entry)
+                row.append(float(entry))
         
         #Reset matrix attributes.
         self.data = matrix
@@ -117,9 +121,25 @@ class matrix:
     
     
     def iterRow(self):
+        """
+        Returns an instance of the iterMatrix class. This instance object supports iteration through the standard Python iteration protocol. The iteration occurs row by row from top left to bottom right. 
+        """
         iterable = iterMatrix(self.data, 'row')
         return iterable
     
+    def iterColumn(self):
+        """
+        Returns an instance of the iterMatrix class. This instance object supports iteration through the standard Python iteration protocol. The iteration occurs column by columns, beginning with the top left and ending at the bottom right.
+        """
+        iterable = iterMatrix(self.data, 'column')
+        return iterable
+    
+    def buildRow(m, n):
+        """
+        Returnsan instance of the buildMatrix class. This instance supports dynamic matrix creation. Entries can be added to the matrix row by row until the matrixFullError is raised. 
+        """
+        builder = buildMatrix(m, n, 'row')
+        return builder
     
     def pr(self):
         print()
@@ -139,15 +159,67 @@ class iterMatrix:
         self.rows = len(data)
         self.columns = len(data[0])
         self.place = 0
+        self.end = (self.rows * self.columns)
         
     def __iter__(self):
         return self
     
     def __next__(self):
         if self.mode == 'row':
-            if self.place < (self.rows * self.columns):
+            if self.place < self.end:
                 temp = self.data[self.place // self.columns][self.place % self.columns]
                 self.place = self.place + 1
                 return temp
             else:
                 raise StopIteration
+        elif self.mode == 'column':
+            if self.place < self.end:
+                temp = self.data[self.place % self.rows][self.place // self.rows]
+                self.place = self.place + 1
+                return temp
+            else:
+                raise StopIteration
+
+class buildMatrix:
+    """
+    A helper class for building a matrix when the entries are not known at matrix creation time. 
+    """
+    def __init__(self, m, n, mode):
+        self.data = []
+        self.mode = mode 
+        self.rows = m 
+        self.columns = n 
+        self.place = 0 
+        self.end = (self.rows * self.columns)
+        
+        #Initialize to a zero matrix
+        for i in range(0, self.rows):
+            temp = []
+            for j in range(0, self.columns):
+                temp.append(0)
+            self.data.append(temp)
+    
+    def insert(self, *entries):
+        """
+        Can insert an arbitrary number of arguments as entries in a matrix. Once the matrix is full, the matrixFullError is raised.
+        """
+        for entry in entries:
+            if self.mode == 'row':
+                if self.place < self.end:
+                    self.data[self.place // self.columns][self.place % self.columns] = entry
+                    self.place = self.place + 1 
+                else:
+                    raise matrixFullError
+            elif self.mode == 'column':
+                if self.place < self.end:
+                    self.data[self.place % self.rows][self.place // self.rows] = entry
+                    self.place = self.place + 1
+                else:
+                    raise matrixFullError
+    
+    def get(self):
+        """
+        Returns an instance of the matrix class containing a built matrix.
+        """
+        temp = matrix(self.rows, self.columns, self.data)
+        return temp
