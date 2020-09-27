@@ -145,6 +145,31 @@ class matrix:
         print()
         print("Displaying Matrix", self.label, "of size", self.rows, 'by', self.columns)
         print(self.data)
+    
+    def smartpr(self):
+        maxLength = 0
+       
+        for row in range(self.rows):
+            for entry in range(self.columns):
+                self.data[row][entry] = str(self.data[row][entry])
+                temp = len(self.data[row][entry])
+                if temp > maxLength:
+                    maxLength = temp 
+        
+        print(maxLength)
+        mstring = ""
+        for row in range(self.rows):
+            mstring = mstring + "[ "
+            for entry in range(self.columns):
+                print(self.data[row][entry])
+                if self.data[row][entry][0] == "-":
+                    mstring = mstring + " " + self.data[row][entry] + " "* (maxLength + 1 - len(self.data[row][entry]))
+                else:
+                    print("here")
+                    mstring = mstring + "  " + self.data[row][entry] + " "* (maxLength - len(self.data[row][entry]))
+            mstring = mstring + " ]\n"
+        print(mstring)
+           
 
 class iterMatrix:
     """
