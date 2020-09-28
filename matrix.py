@@ -30,13 +30,15 @@ class matrix:
     
     def __init__(self, m=0, n=0, data=[], name='A1'):
         """
-        Initializes the matrix. If m or n are not zero, the matrix is initialized with zeroes.
+        Constructor of matrix objects.
+
+        If m or n are not zero, the matrix is initialized with zeroes.
         """
     
         self.rows = m
         self.columns = n
-        self.label = name
         self.data = data
+        self.label = name
         
         if data == []:
             for i in range(m):
@@ -96,27 +98,30 @@ class matrix:
         self.rows = len(matrix)
     
     
-    def getRow(self, num):
+    def getRow(self, rowNumber):
         """
         Return the row matrix of the specified row. Rows begin at 1
         """
-        returnMatrix = matrix()
         
-        if num > 0 and num <= self.rows:
-            returnMatrix.data.append(self.data[num-1])
+        if rowNumber > 0 and rowNumber <= self.rows:
+            returnMatrix = matrix(1, self.columns)
+            newData = self.data[rowNumber-1]
+            returnMatrix.data = newData
             return returnMatrix
     
     
-    def getColumn(self, num):
+    def getColumn(self, columnNumber):
         """
         Return the column matrix of the specified column. Columns begin at 1
         """
-        returnMatrix = matrix()
         
-        if num > 0 and num <= self.columns:
+        if columnNumber > 0 and columnNumber <= self.columns:
+            returnMatrix = matrix(self.rows, 1)
+            newData = []
             for row in range(self.rows):
-                tempRow = self.data[row][num-1]
-                returnMatrix.data.append(tempRow)
+                tempRow = [self.data[row][columnNumber-1]]
+                newData.append(tempRow)
+            returnMatrix.data = newData
             return returnMatrix
     
     
@@ -136,7 +141,7 @@ class matrix:
     
     def buildRow(m, n):
         """
-        Returnsan instance of the buildMatrix class. This instance supports dynamic matrix creation. Entries can be added to the matrix row by row until the matrixFullError is raised. 
+        Returns an instance of the buildMatrix class. This instance supports dynamic matrix creation. Entries can be added to the matrix row by row until the matrixFullError is raised. 
         """
         builder = buildMatrix(m, n, 'row')
         return builder

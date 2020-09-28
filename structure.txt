@@ -1,0 +1,14 @@
+#The structure of the Source Code in MatrixTools
+
+First Revision
+# Saturday, September 26, 2020
+# matrix.py
+        $ Specifies the matrix class
+        $ Matrix objects only have helper methods that support working with matrices (return a certain row, iterate over the matrix, get a string representation, etc)
+# matrixTools.py
+        $ Specifies binary operations on matrices (adding, subtracting, multiplying by scalar, dot product, vector product, etc)
+        $ Specifies algorithms that work on matrices (Gaussian Elimination)
+# matrixCLI.py
+        $ A driver program that makes it easy to work with matrix objects.
+        $ Text based. Uses a command line like structure. 
+        $ Supports variables.
